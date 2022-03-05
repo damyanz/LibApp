@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LibApp.Interfaces;
+using LibApp.Repositories;
 
 namespace LibApp
 {
@@ -36,6 +38,7 @@ namespace LibApp
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddScoped<IBookRepository, BookRepository>();
             services.AddControllersWithViews();
         }
 
