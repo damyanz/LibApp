@@ -2,6 +2,7 @@
 using LibApp.Models;
 using LibApp.Interfaces;
 using LibApp.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibApp.Repositories
 {
@@ -15,7 +16,12 @@ namespace LibApp.Repositories
 
         public IEnumerable<Book> GetBooks()
         {
-            return _context.Books;
+            return _context.Books.Include(book => book.Genre);
+        }
+
+        public IEnumerable<Genre> GetGenres()
+        {
+            return _context.Genre;
         }
 
         public Book GetBookById(int bookId) {
