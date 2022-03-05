@@ -7,9 +7,11 @@ using LibApp.Models;
 using LibApp.ViewModels;
 using LibApp.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LibApp.Controllers
 {
+    [Authorize(Roles = "StoreManager, Owner")]
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;

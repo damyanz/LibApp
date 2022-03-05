@@ -1,5 +1,7 @@
-﻿@model LibApp.Models.Book
-@{ 
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@model LibApp.Models.Book
+@{
     ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -11,4 +13,8 @@
     <li>Release Date: @Model.ReleaseDate.ToShortDateString()</li>
     <li>Date Added: @Model.DateAdded.ToShortDateString()</li>
     <li>Number in Stock: @Model.NumberInStock</li>
+    @if (User.IsInRole("StoreManager") || User.IsInRole("Owner"))
+    {
+        <li><a href="/books/edit/@Model.Id">Edit</a></li>
+    }
 </ul>

@@ -8,22 +8,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LibApp.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LibApp.Controllers.Api
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BooksController : ControllerBase
     {
-        public BooksController(ApplicationDbContext context, IMapper mapper)
+        private readonly IBookRepository _repository;
+        public BooksController(IBookRepository repository)
         {
-            _context = context;
-            _mapper = mapper;
+            _repository = repository;
         }
 
         public IEnumerable<BookDto> GetBooks(string query = null)
         {
-            var booksQuery = _context.Books.Where(b => b.NumberAvailable > 0);
+            var booksQuery = _repository.GetBooks().Where(b => b.NumberAvailable > 0);
 
             if (!String.IsNullOrWhiteSpace(query))
             {
@@ -31,6 +34,22 @@ namespace LibApp.Controllers.Api
             }
 
             return booksQuery.ToList().Select(_mapper.Map<Book, BookDto>);
+        }
+
+        [Authorize(Roles = "StoreManager, Owner")]
+        [HttpDelete("{id}")]
+        public IActionResult RemoveBook(int id)
+        {
+            try
+            {
+                _repository.DeleteBook(id);
+                _repository.Save();
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+            return Ok();
         }
 
         private readonly ApplicationDbContext _context;

@@ -14,8 +14,8 @@
     {
         <li>Birthdate: @Model.Birthdate.Value.ToShortDateString()</li>
     }
-    @if (User.IsInRole("Administrator"))
+    @if (User.IsInRole("Owner"))
     {
-        <li><a href="customers/edit/@Model.Id">Edit</a></li>
+        <li><a href="/customers/edit/@Model.Id">Edit</a></li>
     }
 </ul>
